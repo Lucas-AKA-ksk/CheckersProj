@@ -9,6 +9,7 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Damas')
 
 def get_row_col_from_mouse(pos):
+    """Função que separa as coordenadas do mouse."""
     x, y = pos
     row = y // SQUARE_SIZE
     col = x // SQUARE_SIZE

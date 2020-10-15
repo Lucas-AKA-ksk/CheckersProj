@@ -19,9 +19,11 @@ class Piece:
         self.y = SQUARE_SIZE * self.row + SQUARE_SIZE // 2
 
     def make_king(self):
+        """Altera o atributo que diz se a peça é um rei para True"""
         self.king = True
 
     def draw(self, win):
+        """Desenha uma peça"""
         radius = SQUARE_SIZE // 2 - self.PADDING
         pygame.draw.circle(win, GREY, (self.x, self.y), radius + self.OUTLINE)
         pygame.draw.circle(win, self.color, (self.x, self.y), radius)

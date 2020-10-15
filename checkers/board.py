@@ -10,12 +10,14 @@ class Board:
         self.create_board()
     
     def draw_squares(self,win):
+        """Desenha o padrão quadriculado do tabuleiro na tela."""
         win.fill(BLACK)
         for row in range(ROWS):
             for col in range(row % 2, ROWS, 2):
                 pygame.draw.rect(win, RED, (row*SQUARE_SIZE, col*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
     def move(self, piece, row, col):
+        """Move a peça selecionada para a coordenada escolhida e torna a peça um rei se possível"""
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
         piece.move(row,col)
 
@@ -44,6 +46,7 @@ class Board:
                     self.board[row].append(0)
                 
     def draw(self, win):
+        """Desenha o tabuleiro e as peças"""
         self.draw_squares(win)
         for row in range(ROWS):
             for col in range(COLS):
@@ -52,6 +55,7 @@ class Board:
                     piece.draw(win)
     
     def remove(self, pieces):
+        """Remove peças capturadas e edita o contador de peças restantes."""
         for piece in pieces:
             self.board[piece.row][piece.col] = 0
             if piece != 0:
@@ -61,6 +65,7 @@ class Board:
                     self.white_left -= 1
 
     def winner(self):
+        """Checa se há vencedores."""
         if self.red_left <= 0:
             return WHITE
         elif self.white_left <= 0:
@@ -89,7 +94,7 @@ class Board:
         for r in range(start, stop, step):
             if left < 0:
                 break
-            
+
             current = self.board[r][left]
             if current == 0:
                 if skipped and not last:
@@ -114,7 +119,7 @@ class Board:
                 last = [current]
 
             left -= 1
-        
+
         return moves
 
 
@@ -124,7 +129,7 @@ class Board:
         for r in range(start, stop, step):
             if right >= COLS:
                 break
-            
+
             current = self.board[r][right]
             if current == 0:
                 if skipped and not last:
@@ -149,5 +154,5 @@ class Board:
                 last = [current]
 
             right += 1
-        
+
         return moves
