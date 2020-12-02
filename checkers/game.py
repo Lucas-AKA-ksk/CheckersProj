@@ -31,14 +31,18 @@ class Game:
             result = self._move(row, col)
             if not result:
                 self.selected = None
-                self.select(row, col)
+                # self.select(row, col)
+            else:
+                print("opt 2 succesful")
+                return 2
 
 
         piece = self.board.get_piece(row, col)
         if piece != 0 and piece.color == self.turn:
             self.selected = piece
             self.valid_moves = self.board.get_valid_moves(piece)
-            return True
+            print("opt 1 succesful")
+            return 1
 
         return False
 
