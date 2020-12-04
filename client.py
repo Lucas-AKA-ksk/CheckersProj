@@ -79,8 +79,8 @@ def handle_server_messages(sock):
 
 def get_row_col_from_mouse(pos):
     """
-    Função que separa as coordenadas do mouse, 
-    realiza uma floor division de modo a obter 
+    Função que separa as coordenadas do mouse,
+    realiza uma floor division de modo a obter
     a linha e coluna correspondente ao espaço na tela selecionado.
     """
     x, y = pos
@@ -89,6 +89,9 @@ def get_row_col_from_mouse(pos):
     return row, col
 
 def main():
+
+    """Game loop"""
+
     player_move = ""
     run = True
     clock = pygame.time.Clock()
@@ -113,21 +116,27 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
                 # TODO: fechar conexão aqui ou em outro local mais apropriado??
-                client.close()
+                #client.close()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if client.id == game.turn:
                     pos = pygame.mouse.get_pos()
                     row, col = get_row_col_from_mouse(pos)
                     move = game.select(row, col)
+
                     # Valor 1 significa que uma peça foi selecionada
                     if move == 1:
-                        #pass
+
+                        # Primeira coordenada de movimento é adicionada à variável,
+                        # essa operação pode repetir várias vezes 
                         player_move = '[/' + str(row) + '/' + str(col)
                         print("piece selected = ", player_move)
+
                     # Valor 2 significa que uma coordenada valida para movimentaćão da peça foi selecionada
                     elif move == 2:
-                        #pass
+
+                        # Segunda coordenada de movimento é adicionada à variável
+                        # e enviada para o servidor, essa operação só ocorre uma vez
                         player_move += '/' + str(row) + '/' + str(col) + '/]'
                         print("player moves = ", player_move)
                         client.send_data(player_move)
@@ -135,9 +144,9 @@ def main():
                 else:
                     print("You must wait for your turn...")
 
-        
+
         #game.update()
-    
+    client.close()
     pygame.quit()
 
 connect_to_server()
