@@ -15,8 +15,8 @@ opponent_moves = []
 def connect_to_server():
 
     """
-    Inicializa o cliente, 
-    inicializaa thread responsável pelo recebimento 
+    Inicializa o cliente,
+    inicializa a thread responsável pelo recebimento
     e interpretação das mensagens do server e aguada por um adversário
     """
 
@@ -63,10 +63,10 @@ def handle_server_messages(sock):
             print(server_msg)
             opponent_waiting.set()
 
-        # Se a mensagem se inicia com '[', ela contem os movimentos 
+        # Se a mensagem se inicia com '[', ela contem os movimentos
         # feitos pelo adversário, que são armazenados em uma variável
-        # global, e serão utilizadas em main(). O evento turn_wait é 
-        # liberado e resetado aqui.
+        # global, e serão utilizadas em main(). O evento turn_wait é
+        # liberado aqui.
         if server_msg.startswith("["):
             global opponent_moves
             opponent_moves = server_msg[2:9].split('/')
@@ -92,7 +92,8 @@ def main():
 
     """Game loop"""
 
-    player_move = ""
+    
+    player_move = "" # armazena os movimentos feitos pelo jogador na rodada
     run = True
     clock = pygame.time.Clock()
     game = Game(WIN)
@@ -101,14 +102,18 @@ def main():
         clock.tick(FPS)
         game.update()
 
+        # Verifica se há um vencedor
         if game.winner() != None:
             print(game.winner())
             run = False
 
+        # Se for a vez do adversário,
+        # aguarda a thread handle_server_messages()
+        # receber o movimento feito pelo mesmo,
+        # e o repete neste cliente, sincronizando os jogos
         if client.id != game.turn:
             print("Waiting for your opponent to move...")
             turn_wait.wait()
-            print("skipped waiting, fuck you!")
             game.select(int(opponent_moves[0]),int(opponent_moves[1]))
             game.select(int(opponent_moves[2]),int(opponent_moves[3]))
 
@@ -150,6 +155,10 @@ def main():
     pygame.quit()
 
 connect_to_server()
+
+# Criando a tela de jogo (vazia, o tabuleiro e as peças
+# são criados com um método próprio em game.py)
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Damas')
+pygame.display.set_caption('Checkers')
+
 main()

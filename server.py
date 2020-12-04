@@ -2,7 +2,6 @@ import socket
 import threading
 from checkers.constants import HEADERSIZE
 
-HEADERSIZE = 10
 
 server = socket.gethostbyname(socket.gethostname())
 port = 5555
@@ -34,7 +33,7 @@ def send_data(receiver, data):
 def receive_data(sender):
 
     """
-    Recebe o Header da mensagem (tamanho max. de 10 bytes),
+    Recebe o Header da mensagem (tamanho fixo de 10 bytes),
     altera o tamanho do buffer de acordo com o tamanho da mensagem real,
     recebe, separa e retorna a mensagem.
     """
@@ -65,9 +64,9 @@ def receive_data(sender):
             full_data = full_data[HEADERSIZE:]
             return full_data
 
-def pairing_conns(conn_1, conn_2, player_1, player_2):
+def pairing_players(conn_1, conn_2, player_1, player_2):
 
-    """Atribui IDs(cores) aos jogadores, autoriza o inicio do jogo
+    """Atribui IDs(cores) aos jogadores, autoriza o inicio da partida
     e inicia threads para manipular as mensagens dos dois jogadores conectados."""
 
     print("[MATCH]Match started between ", player_1, "and ", player_2)
@@ -104,7 +103,9 @@ def message_handling(sender, receiver):
 def accepting_connections():
 
     """
-    Executa constantemente aceitando conexões, a cada dois jogadores um jogo é iniciado entre eles.
+    Executa constantemente aceitando conexões,
+    a cada dois jogadores conectados,
+    um jogo é iniciado entre eles.
     """
 
     print("[SERVER INITIATED] Waiting for connections...")
@@ -122,9 +123,9 @@ def accepting_connections():
     while True:
         try:
             conn, clnt_addr = sock.accept()
-            #conn.send(b"Welcome player!!")
             send_data(conn,"Welcome player!")
 
+            # Adiciona ip e porta às respectivas listas
             all_conn.append(conn)
             all_addr.append(clnt_addr)
 
@@ -132,10 +133,9 @@ def accepting_connections():
 
             # a cada 2 clients conectados se inicia uma nova partida (utilizando uma thread)
             if len(all_addr) % 2 == 0:
-                game = threading.Thread(target=pairing_conns, args=(all_conn[len(all_conn) - 2],all_conn[len(all_conn) - 1],all_addr[len(all_addr) - 2],all_addr[len(all_addr) -1],), daemon=True)
+                game = threading.Thread(target=pairing_players, args=(all_conn[len(all_conn) - 2],all_conn[len(all_conn) - 1],all_addr[len(all_addr) - 2],all_addr[len(all_addr) -1],), daemon=True)
                 game.start()
             else:
-                #conn.send(b"Waiting for another player...")
                 send_data(conn,"Waiting for another player...")
 
             players += 1
