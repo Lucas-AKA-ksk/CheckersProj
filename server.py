@@ -113,22 +113,12 @@ def accepting_connections():
 
     print("[SERVER INITIATED] Waiting for connections...")
 
-    # fecha todas as conexões listadas (em caso de server reboot)
-    for conn in all_conn:
-        conn.close()
-
-    # esvazia as listas de conns e addrs (em caso de server reboot)
-    del all_conn[:]
-    del all_addr[:]
-
-    players = 0
-
     while True:
         try:
             conn, clnt_addr = sock.accept()
             send_data(conn,"Welcome player!")
 
-            # Adiciona ip e porta às respectivas listas
+            # Adiciona as infos retornadas à uma lista
             all_conn.append(conn)
             all_addr.append(clnt_addr)
 
@@ -138,11 +128,7 @@ def accepting_connections():
             if len(all_addr) % 2 == 0:
                 game = threading.Thread(target=pairing_players, args=(all_conn[len(all_conn) - 2],all_conn[len(all_conn) - 1],all_addr[len(all_addr) - 2],all_addr[len(all_addr) -1],), daemon=True)
                 game.start()
-            else:
-                send_data(conn,"Waiting for another player...")
-
-            players += 1
-
+            
         except socket.error as msg:
             print("[ERROR] Caught exception socket.error : %s" %msg)
             exit()

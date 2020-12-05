@@ -46,7 +46,7 @@ def handle_server_messages(sock):
 
         # Se a mensagem for vazia, quebra o loop (conexão perdida ou fechada pelo server).
         if not server_msg:
-            print("[ERROR] Lost connection to server, closing game...")
+            print("[ERROR] Lost connection to server, close your game...")
             break
 
         # Atribui um id de acordo com a mensagem do servidor.
@@ -107,7 +107,7 @@ def main():
 
         # Se for a vez do adversário,
         # aguarda a thread handle_server_messages()
-        # receber o movimento feito pelo adversario,
+        # receber o movimento feito pelo adversário,
         # e o repete neste cliente, sincronizando os jogos
         if client.id != game.turn:
             print("Waiting for your opponent to move...")
@@ -130,7 +130,7 @@ def main():
                     if move == 1:
 
                         # Primeira coordenada de movimento é adicionada à variável,
-                        # essa operação pode repetir várias vezes 
+                        # essa operação pode repetir várias vezes
                         player_move = '[/' + str(row) + '/' + str(col)
                         print("piece selected = ", player_move)
 
