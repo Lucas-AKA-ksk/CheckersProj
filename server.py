@@ -18,7 +18,7 @@ def sock_init():
 
     new_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     new_sock.bind(addr)
-    new_sock.listen(2)
+    new_sock.listen(0)
     return new_sock
 
 def send_data(receiver, data):
@@ -48,7 +48,10 @@ def receive_data(sender):
         # Recebe N bytes da mensagem no segundo loop
         data = sender.recv(buffer_size)
 
-        if new_data:
+        if not data:
+            return
+
+        elif new_data:
 
             # buffer_size passa a ser do mesmo tamanho da mensagem
             data_len = int(data[:HEADERSIZE])
@@ -74,12 +77,12 @@ def pairing_players(conn_1, conn_2, player_1, player_2):
     send_data(conn_2,"You're playing as white.")
     send_data(conn_1,"Start game")
     send_data(conn_2,"Start game")
-    talk_to_1 = threading.Thread(target=message_handling, args=(conn_1,conn_2,))
-    talk_to_2 = threading.Thread(target=message_handling, args=(conn_2,conn_1,))
+    talk_to_1 = threading.Thread(target=message_handling, args=(conn_1,conn_2,player_1,))
+    talk_to_2 = threading.Thread(target=message_handling, args=(conn_2,conn_1,player_2,))
     talk_to_1.start()
     talk_to_2.start()
 
-def message_handling(sender, receiver):
+def message_handling(sender, receiver, player_name):
 
     """
     Recebe as mensagens de um cliente e repassa para o outro.
@@ -91,11 +94,11 @@ def message_handling(sender, receiver):
 
         # Conexão com cliente perdida
         if not msg:
+            print("[CLOSED]Connection closed or lost with:", player_name)
             break
 
         # Formado de mensagem que representa a coordenada do movimento do jogador
         if msg.startswith("["):
-            print("sending movement")
             send_data(receiver, msg)
 
     sender.close()

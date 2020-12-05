@@ -90,9 +90,6 @@ def get_row_col_from_mouse(pos):
 
 def main():
 
-    """Game loop"""
-
-    
     player_move = "" # armazena os movimentos feitos pelo jogador na rodada
     run = True
     clock = pygame.time.Clock()
@@ -104,12 +101,13 @@ def main():
 
         # Verifica se há um vencedor
         if game.winner() != None:
-            print(game.winner())
-            run = False
+            print("Player ",game.winner(), "won the match!!")
+            break
+            #run = False
 
         # Se for a vez do adversário,
         # aguarda a thread handle_server_messages()
-        # receber o movimento feito pelo mesmo,
+        # receber o movimento feito pelo adversario,
         # e o repete neste cliente, sincronizando os jogos
         if client.id != game.turn:
             print("Waiting for your opponent to move...")
@@ -120,8 +118,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-                # TODO: fechar conexão aqui ou em outro local mais apropriado??
-                #client.close()
+
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if client.id == game.turn:
@@ -149,15 +146,12 @@ def main():
                 else:
                     print("You must wait for your turn...")
 
-
-        #game.update()
     client.close()
     pygame.quit()
 
 connect_to_server()
 
-# Criando a tela de jogo (vazia, o tabuleiro e as peças
-# são criados com um método próprio em game.py)
+# Criando a tela de jogo
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Checkers')
 

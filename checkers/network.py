@@ -11,9 +11,6 @@ class Network:
         self.id = None
         self.connect()
 
-    def get_id(self):
-        return self.id
-
     def connect(self):
         try:
             self.client.connect(self.addr)
@@ -51,7 +48,10 @@ class Network:
             # Recebe N bytes da mensagem no segundo loop
             data = self.client.recv(buffer_size)
 
-            if new_data:
+            if not data:
+                return
+
+            elif new_data:
 
                 # buffer_size passa a ser do mesmo tamanho da mensagem
                 data_len = int(data[:HEADERSIZE])
