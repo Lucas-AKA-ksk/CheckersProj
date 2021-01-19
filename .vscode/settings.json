@@ -1,6 +1,0 @@
-{
-    "python.pythonPath": "/home/lucas/Documents/Projects/python_Stuff/CheckersProj/venv/bin/python3",
-    "python.linting.pylintArgs": [
-        "--extension-pkg-whitelist=pygame"
-    ]
-}
