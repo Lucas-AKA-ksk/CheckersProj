@@ -6,6 +6,7 @@ from checkers.constants import HEADERSIZE
 server = socket.gethostbyname(socket.gethostname())
 port = 5555
 addr = (server, port)
+
 all_conn = []
 all_addr = []
 
@@ -116,7 +117,6 @@ def accepting_connections():
     while True:
         try:
             conn, clnt_addr = sock.accept()
-            send_data(conn,"Welcome player!")
 
             # Adiciona as infos retornadas à uma lista
             all_conn.append(conn)

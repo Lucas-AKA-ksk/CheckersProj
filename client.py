@@ -3,7 +3,7 @@ import pygame
 
 from checkers.network import Network
 from checkers.constants import WIDTH, HEIGHT, SQUARE_SIZE, RED, WHITE
-from checkers.board import Board
+#from checkers.board import Board
 from checkers.game import Game
 
 FPS = 60
